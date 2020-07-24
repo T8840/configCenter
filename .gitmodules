@@ -1,0 +1,3 @@
+[submodule "{{cookiecutter.project_name}}/pubCode"]
+	path = {{cookiecutter.project_name}}/pubCode
+	url = https://github.com/T8840/pubCode.git
