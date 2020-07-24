@@ -10,7 +10,7 @@
 4. 复制并重命名环境配置文件
 
 ```
-    git clone + projece_path 
+    git clone https://github.com/T8840/configCenter.git --recursive
     cd configCenter
     pipenv install --dev
     cp .env.example .env
