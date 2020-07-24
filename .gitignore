@@ -54,7 +54,6 @@ env/
 # other
 *.log
 .env
-pubCode/
 /__pycache__/
 /.idea/
 /.vscode/
