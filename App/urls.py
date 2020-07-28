@@ -3,8 +3,9 @@
 from App.api.views import api, blueprint
 from App.api.views import ResfulHelloViews, \
                           CommonCnfViews, CommonCnfsViews, CommonCnfSearchViews, \
-                          EnvCnfViews, EnvCnfsViews, EnvCnfSearchViews
-from App.api.serializer import CommonCnfSchema , EnvCnfSchema
+                          EnvCnfViews, EnvCnfsViews, EnvCnfSearchViews, \
+                          SrvCnfViews, SrvCnfsViews, TeamProjectViews, TeamSetViews
+from App.api.serializer import CommonCnfSchema , EnvCnfSchema, SrvCnfSchema
 from App.extensions import apispec
 from flask import current_app
 
@@ -18,13 +19,20 @@ api.add_resource(EnvCnfViews, '/envConfig/', '/envConfig/<string:env>/<string:co
 api.add_resource(EnvCnfsViews, '/envConfigs',endpoint="envConfigs")
 api.add_resource(EnvCnfSearchViews, '/envConfigSearch',endpoint="envConfigSearch")
 
+api.add_resource(SrvCnfViews, '/srvConfig/', '/srvConfig/<string:env>/<string:project>',endpoint="srvConfig_by_env_project")
+api.add_resource(SrvCnfsViews, '/srvConfigs',endpoint="srvConfigs")
+
+api.add_resource(TeamProjectViews, '/teamProject',endpoint="teamProject")
+api.add_resource(TeamSetViews, '/teamSet',endpoint="teamSet")
 
 @blueprint.before_app_first_request
 def register_views():
     apispec.spec.path(view=ResfulHelloViews, app=current_app)
     apispec.spec.path(view=CommonCnfViews, app=current_app)
     apispec.spec.path(view=EnvCnfViews, app=current_app)
+    apispec.spec.path(view=SrvCnfViews, app=current_app)
 
     apispec.spec.components.schema("CommonCnfSchema", schema=CommonCnfSchema)
     apispec.spec.components.schema("EnvCnfSchema", schema=EnvCnfSchema)
+    apispec.spec.components.schema("SrvCnfSchema", schema=SrvCnfSchema)
 

@@ -277,3 +277,83 @@ class EnvCnfSearchViews(Resource):
         msg.setSucceed(respData=envCnfSchema.dump(envCnfs))
         msg.addMsgField({"total":total})
         return jsonify(msg.getMsg())
+
+
+
+class SrvCnfViews(Resource):
+    """
+    服务配置单一视图：
+        来源：发版平台
+        功能：通过env+project -> projectInfo(Example: project IP and so on)
+    """
+    def get(self, env, project):
+        """
+        获取服务配置
+        """
+        app.logger.info(f"EnvCnfViews get(env={env} project={project})")
+        msg = MsgBuilder()
+        config = SrvCnf.query.filter_by(env=env, project=project, active=1).first()
+        app.logger.info(f"EnvCnfViews get(config={config})")
+        srvCnfSchema = SrvCnfSchema()
+        configSerialized = srvCnfSchema.dump(config)
+        msg.setSucceed(respData=configSerialized)
+        return jsonify(msg.getMsg())
+
+
+
+srvCnfReqData = reqparse.RequestParser()
+srvCnfReqData.add_argument("env", type=str, location=["args", "json"])
+srvCnfReqData.add_argument("team", type=str, location=["args", "json"])
+srvCnfReqData.add_argument("project", type=str, location=["args", "json"])
+
+class SrvCnfsViews(Resource):
+    """
+    服务配置类列表视图
+    """
+
+    def get(self):
+        """
+        获取服务配置列表
+        :return:list
+        """
+        app.logger.info(f"SrvCnfsViews get({srvCnfReqData.parse_args()})")
+        msg = MsgBuilder()
+        args = removeNoneKey(srvCnfReqData.parse_args())
+        config = SrvCnf.query.filter_by(active=1, **args).all()
+        srvCnfSchema = SrvCnfSchema(many=True)
+        configSerialized = srvCnfSchema.dump(config)
+        msg.setSucceed(respData=configSerialized)
+        return jsonify(msg.getMsg())
+
+
+teamProjectParams = reqparse.RequestParser()
+teamProjectParams.add_argument("team", type=str, required=True, location=["args"])
+teamProjectParams.add_argument("env", type=str, required=True, location=["args"])
+
+class TeamProjectViews(Resource):
+    """
+    项目组项目视图
+    """
+
+    def get(self):
+        app.logger.info(f"TeamProjectViews get({teamProjectParams.parse_args()})")
+        msg = MsgBuilder()
+        args = removeNoneKey(teamProjectParams.parse_args())
+        teamInfo = SrvCnf.query.filter_by(active=1, **args).all()
+        teamInfoSchema = TeamProjectSchema(many=True)
+        teamInfoSerialized = teamInfoSchema.dump(teamInfo)
+        msg.setSucceed(respData=[project.get("project") for project in teamInfoSerialized])
+        return jsonify(msg.getMsg())
+
+
+class TeamSetViews(Resource):
+    """
+    项目组集视图
+    """
+
+    def get(self):
+        msg = MsgBuilder()
+        allTeam = SrvCnf.query.all()
+        teamList = list(set([team.team for team in allTeam]))
+        msg.setSucceed(respData=teamList)
+        return jsonify(msg.getMsg())
