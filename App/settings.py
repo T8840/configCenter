@@ -14,8 +14,8 @@ env.read_env()
 #  环境参数 默认为production
 ENV = env.str("FLASK_ENV", default="production")
 DEBUG = ENV == "development"
-PORT = env.int("PORT", default=5000)
-FLASK_PORT = env.int("FLASK_PORT", default=5000)
+PORT = env.int("PORT", default=6680)
+FLASK_PORT = env.int("FLASK_PORT", default=6680)
 
 #  数据库连接地址
 #  sqlite:////tmp/test.db

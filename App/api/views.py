@@ -258,7 +258,7 @@ class EnvCnfSearchViews(Resource):
     通用环境类查询列表视图
     """
     def get(self):
-        app.logger.info(f"EnvCnfSelectViews get(envCnfSelect={envCnfSelect.parse_args()}")
+        app.logger.info(f"EnvCnfSearchViews get(envCnfSearch={envCnfSelect.parse_args()}")
         msg = MsgBuilder()
         args = envCnfSelect.parse_args()
         pageNum , limitNum = paginateParams(args)
