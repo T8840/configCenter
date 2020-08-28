@@ -14,6 +14,7 @@ usage()
 #  默认值设定
 container_name="configCenter"
 container_port="6680"
+image_name="test:configCenter_v202008281036"
 while getopts "n:i:p:h" arg #选项后面的冒号表示该选项需要参数
 do
     case $arg in
